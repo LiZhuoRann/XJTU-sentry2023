@@ -5,7 +5,7 @@ RUN mkdir /shaobing
 WORKDIR /root/shaobing
 
 # TODO: clone projects
-# RUN git clone .. 
+RUN git clone https://github.com/LiZhuoRann/XJTU-sentry2023.git
 
 # install dependencies and some tools
 RUN apt-get update && rosdep install --from-paths src --ignore-src -r -y 
