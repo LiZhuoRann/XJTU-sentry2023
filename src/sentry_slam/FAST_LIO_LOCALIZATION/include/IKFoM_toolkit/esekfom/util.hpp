@@ -37,6 +37,8 @@
 
 #include <Eigen/Core>
 #include "../mtk/src/mtkmath.hpp"
+
+// Error State Estimation Kalman Filter on Manifolds
 namespace esekfom {
 
 template <typename T1, typename T2>

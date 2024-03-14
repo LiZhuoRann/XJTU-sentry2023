@@ -45,7 +45,10 @@ int open_port() {
     }
     return 1;
 }
-
+/**
+ * @brief 线程执行函数，监听串口数据并
+ * @todo 想不通这个逻辑，如果休眠1ms时间到了，电控没有发来数据，串口会不会异常重启？如果数据错位能否自动修复？
+ */
 void readSerial()
 {
     while (true)
@@ -75,12 +78,17 @@ void readSerial()
             sp.close();
             open_port();
         }
-        ros::Duration(0.001).sleep();
+        ros::Duration(0.001).sleep();   // 1kHz
+        // 在每次操作后休眠0.001秒。这种模式常常用于读取和处理来自硬件设备（如传感器）的数据。这样可以确保主线程不会被阻塞，而且可以实时处理数据。
     }
     
 }
 
-// Callback function for /cmd_vel_string topic
+/**
+ * @brief Callback function for /cmd_vel_string topic
+          发送
+ * @param msg 指向接收到的消息的常量指针
+ */
 void cmdVelStringCallback(const std_msgs::String::ConstPtr& msg)
 {
     try
@@ -90,6 +98,7 @@ void cmdVelStringCallback(const std_msgs::String::ConstPtr& msg)
         {
             printf("%x ", (unsigned char) msg->data.c_str()[i]);
         }
+        // wirte date into serial port, start to transmit?
         sp.write(reinterpret_cast<const uint8_t *>(msg->data.c_str()), WRITE_SIZE);
     }
     catch (serial::IOException &e)
@@ -128,7 +137,6 @@ int main(int argc, char **argv) {
         loop_rate.sleep();
     }
 
-    
     ROS_FATAL_STREAM("###### exit while ######");
 
     t1.join();

@@ -1,6 +1,14 @@
-#include "ros/ros.h"  
-
-
+/**
+ * @file Trans_odom_2d.cpp
+ * @author your name (you@domain.com)
+ * @brief 发布 2d 里程计信息 nav_msgs::Odometry，这个节点最后没有被用到
+ * @version 0.1
+ * @date 2024-03-10
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+#include <ros/ros.h>  
 #include <serial/serial.h>  
 #include <std_msgs/String.h>  
 #include <sstream>  
@@ -8,10 +16,12 @@
 #include <string>
 #include <iostream>
 
-
 nav_msgs::Odometry odom_2d;
 
-// 接收到订阅的消息后，会进入消息回调函数
+/**
+ * @brief 接收到订阅的消息 /cmd_vel 后，会进入消息回调函数，填充里程计信息
+ * @param odom 
+ */
 void callback(const nav_msgs::Odometry& odom)
 {
     // receive the msg from cmd_vel
@@ -39,7 +49,13 @@ void callback(const nav_msgs::Odometry& odom)
     odom_2d.twist.twist.angular.z = odom.twist.twist.angular.z;
 }
 
-
+/**
+ * @brief 启动结点，订阅 /cmd_vel,发布 /odom_2d
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main (int argc, char** argv){
 
     ros::init(argc, argv, "Trans_odom_2d");
@@ -47,8 +63,6 @@ int main (int argc, char** argv){
     ros::NodeHandle n;
     ros::Rate r(100);
     
-
-    // 创建一个Subscriber，订阅名为data_chatter的topic，注册回调函数chatterCallback 
     ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, callback); 
     ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom_2d",50);
     while(ros::ok()){

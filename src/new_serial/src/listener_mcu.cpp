@@ -1,3 +1,21 @@
+
+/**
+ * @file listener_mcu.cpp
+ * @author your name (you@domain.com)
+ * @brief 接收下位机串口信息，保存在参数服务器中
+ * @version 0.1
+ * @date 2024-03-12
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
+ /**
+   * Data Stream
+   [电控串口通信]: std_msgs::String /serial_data
+        |
+   [sentry_stategy] 上位机控制线程 /RobotControl
+ */
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include "../include/listner_mcu.h"
@@ -28,6 +46,7 @@ void serialDataCallback(const std_msgs::String::ConstPtr &msg) {
         return;
     }
     printf("帧头帧尾匹配成功\n");
+    // ros::param::set 设置参数
     ros::param::set("/RobotStatus/hp", sentryInfo.hp);
     ros::param::set("/RobotStatus/bullet", sentryInfo.bullet);
     ros::param::set("/RobotStatus/post",sentryInfo.post);

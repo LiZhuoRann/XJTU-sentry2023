@@ -1,5 +1,6 @@
-alpha_v: 0.3 # 0.2 by default
-alpha_w: 0.3 # 0.2 by default
-raw_cmd_topic: "cmd_vel" # raw_cmd_vel by default
+# velocity_smoother_ema 的配置文件
+alpha_v: 0.3                # 0.2 by default
+alpha_w: 0.3                # 0.2 by default
+raw_cmd_topic: "cmd_vel"    # raw_cmd_vel by default
 cmd_topic: "smooth_cmd_vel" # cmd_vel by default
-cmd_rate: 30.0 # 30.0 Hz by default
+cmd_rate: 30.0              # 30.0 Hz by default

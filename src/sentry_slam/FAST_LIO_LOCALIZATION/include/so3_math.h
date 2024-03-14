@@ -2,7 +2,7 @@
 #define SO3_MATH_H
 
 #include <math.h>
-#include <Eigen/Core>
+#include <Eigen/Core> 
 
 #define SKEW_SYM_MATRX(v) 0.0,-v[2],v[1],v[2],0.0,-v[0],-v[1],v[0],0.0
 

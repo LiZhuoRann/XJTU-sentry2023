@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(velocity_smoother_ema)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 

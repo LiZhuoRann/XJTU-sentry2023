@@ -64,5 +64,5 @@
         "variant": "cpp",
         "bit": "cpp"
     },
-    "cmake.sourceDirectory": "/home/xjturm/NEXTE_Sentry_Nav/src/new_serial"
+    "cmake.sourceDirectory": "/shaobing/src"
 }

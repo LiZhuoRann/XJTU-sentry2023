@@ -32,7 +32,7 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-#include <omp.h>
+#include "/usr/lib/gcc/x86_64-linux-gnu/9/include/omp.h"
 #include <mutex>
 #include <math.h>
 #include <thread>
@@ -454,6 +454,7 @@ void map_incremental()
 
 PointCloudXYZI::Ptr pcl_wait_pub(new PointCloudXYZI(500000, 1));
 PointCloudXYZI::Ptr pcl_wait_save(new PointCloudXYZI());
+
 void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
 {
     if(scan_pub_en)
@@ -478,8 +479,8 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. pcd save will largely influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. pcd save will largely influence the real-time performences */
     if (pcd_save_en)
     {
         int size = feats_undistort->points.size();
@@ -552,6 +553,7 @@ void set_posestamp(T & out)
     
 }
 
+// camera_init 到 body 的 TF 
 void publish_odometry(const ros::Publisher & pubOdomAftMapped)
 {
     odomAftMapped.header.frame_id = "camera_init";
@@ -583,8 +585,6 @@ void publish_odometry(const ros::Publisher & pubOdomAftMapped)
     q.setY(odomAftMapped.pose.pose.orientation.y);
     q.setZ(odomAftMapped.pose.pose.orientation.z);
     transform.setRotation( q );
-    // TODO 这里使用当前时间发布tf 否则当livox时间不正确时无法正常tf
-//    br.sendTransform( tf::StampedTransform( transform, odomAftMapped.header.stamp, "camera_init", "body" ) );
     br.sendTransform( tf::StampedTransform( transform, ros::Time::now(), "camera_init", "body" ) );
 }
 
@@ -730,7 +730,7 @@ int main(int argc, char** argv)
     nh.param<double>("mapping/gyr_cov",gyr_cov,0.1);
     nh.param<double>("mapping/acc_cov",acc_cov,0.1);
     nh.param<double>("mapping/b_gyr_cov",b_gyr_cov,0.0001);
-    nh.param<double>("mapping/b_acc_cov",b_acc_cov,0.0001);
+    nh.param<double>("mapping/b_acc _cov",b_acc_cov,0.0001);
     nh.param<double>("preprocess/blind", p_pre->blind, 0.01);
     nh.param<double>("preprocess/max_range",p_pre->max_scan_range, 100.f);
     nh.param<int>("preprocess/lidar_type", p_pre->lidar_type, AVIA);
@@ -964,8 +964,8 @@ int main(int argc, char** argv)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. pcd save will largely influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. pcd save will largely influence the real-time performences */
     if (pcl_wait_save->size() > 0 && pcd_save_en)
     {
         string file_name = string("scans.pcd");

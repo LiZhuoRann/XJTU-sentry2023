@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # coding=utf8
+
 from __future__ import print_function, division, absolute_import
 
 import copy
@@ -22,69 +23,105 @@ T_map_to_odom = np.eye(4)
 cur_odom = None
 cur_scan = None
 
-
+# 位姿信息 -> 变换矩阵
 def pose_to_mat(pose_msg):
+    # 矩阵相乘，表示了一个旋转和平移的组合变换
     return np.matmul(
+        # 将 3D 位置向量转换为一个平移变换矩阵
         tf.listener.xyz_to_mat44(pose_msg.pose.pose.position),
+        # 将四元数转换为一个旋转变换矩阵
         tf.listener.xyzw_to_mat44(pose_msg.pose.pose.orientation),
     )
 
-
+# 点云 -> array
 def msg_to_array(pc_msg):
     pc_array = ros_numpy.numpify(pc_msg)
+    # 新建一个数组，用于存储点云中每个点的 x、y，z 坐标
     pc = np.zeros([len(pc_array), 3])
     pc[:, 0] = pc_array['x']
     pc[:, 1] = pc_array['y']
     pc[:, 2] = pc_array['z']
     return pc
 
-
+'''
+/**
+ * @brief 使用迭代最近点（Iterative Closest Point，ICP）算法来对两个点云进行配准
+ * @param pc_scan 待配准点云
+ * @param pc_map  参考点云
+ * @param initial 初始变换矩阵
+ * @param scale   缩放因子
+ */
+ '''
 def registration_at_scale(pc_scan, pc_map, initial, scale):
+    # 调用 oepn3d 库函数，进行 ICP 配准
     result_icp = o3d.pipelines.registration.registration_icp(
+        # 源点云和目标点云都被降采样，以提高配准速度
         voxel_down_sample(pc_scan, SCAN_VOXEL_SIZE * scale), voxel_down_sample(pc_map, MAP_VOXEL_SIZE * scale),
+        # 最大配准距离：1.0*scale
         1.0 * scale, initial,
+        # 变换估计方法：点对点（Point-to-Point）
         o3d.pipelines.registration.TransformationEstimationPointToPoint(),
+        # 收敛条件：最大迭代次数为20。
         o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=20)
     )
-
+    # 返回配准结果的变换矩阵和适应度值。
+    # 变换矩阵描述了如何将 pc_scan 变换到 pc_map 的坐标系中，
+    # 适应度值描述了配准的质量，值越大表示配准越好。
     return result_icp.transformation, result_icp.fitness
 
-
+# 计算一个SE(3)变换矩阵的逆
 def inverse_se3(trans):
     trans_inverse = np.eye(4)
-    # R
+    # R 计算旋转部分的逆。在SE(3)变换矩阵中，左上角的3x3子矩阵表示旋转。
+    # 旋转矩阵的逆等于它的转置，所以这里直接取trans的左上角3x3子矩阵的转置。
     trans_inverse[:3, :3] = trans[:3, :3].T
-    # t
+    # t 计算平移部分的逆。在SE(3)变换矩阵中，最右列的前三个元素表示平移。
+    # 平移向量的逆等于它的负值，但是这个负值需要在旋转的坐标系中表示，
+    # 所以这里先将trans的左上角3x3子矩阵（即旋转矩阵）的转置与trans的最右列的前三个元素（即平移向量）相乘，然后取负值。
     trans_inverse[:3, 3] = -np.matmul(trans[:3, :3].T, trans[:3, 3])
     return trans_inverse
 
-
+# 发布点云话题
 def publish_point_cloud(publisher, header, pc):
+    # 创建一个 numpy array，定义长度和数据类型
     data = np.zeros(len(pc), dtype=[
         ('x', np.float32),
         ('y', np.float32),
         ('z', np.float32),
         ('intensity', np.float32),
     ])
+    # 填充 data
     data['x'] = pc[:, 0]
     data['y'] = pc[:, 1]
     data['z'] = pc[:, 2]
+    # 检查pc是否包含强度信息。如果pc的列数等于4，那么它就包含强度信息
     if pc.shape[1] == 4:
         data['intensity'] = pc[:, 3]
+    # ros_numpy.msgify函数将data转换为一个PointCloud2消息，然后发布消息
     msg = ros_numpy.msgify(PointCloud2, data)
     msg.header = header
     publisher.publish(msg)
 
-
+'''
+/**
+ * @brief 提取全局地图中在当前机器人视野（Field of View，FOV）内的点云
+ * @param global_map       全局地图的点云
+ * @param pose_estimation  机器人的估计位姿 map -> odom
+ * @param cur_odom         当前的里程计读数
+ */
+ '''
 def crop_global_map_in_FOV(global_map, pose_estimation, cur_odom):
     # 当前scan原点的位姿
+    # base -> map = (map -> odom -> base)^{-1}
     T_odom_to_base_link = pose_to_mat(cur_odom)
     T_map_to_base_link = np.matmul(pose_estimation, T_odom_to_base_link)
     T_base_link_to_map = inverse_se3(T_map_to_base_link)
 
     # 把地图转换到lidar系下
     global_map_in_map = np.array(global_map.points)
+    # 在数组的每一行后面添加一个1，得到一个齐次坐标表示的点云
     global_map_in_map = np.column_stack([global_map_in_map, np.ones(len(global_map_in_map))])
+    # 得到在机器人坐标系中的点云k
     global_map_in_base_link = np.matmul(T_base_link_to_map, global_map_in_map.T).T
 
     # 将视角内的地图点提取出来
@@ -102,10 +139,11 @@ def crop_global_map_in_FOV(global_map, pose_estimation, cur_odom):
             (global_map_in_base_link[:, 0] < FOV_FAR) &
             (np.abs(np.arctan2(global_map_in_base_link[:, 1], global_map_in_base_link[:, 0])) < FOV / 2.0)
         )
+
+    # 发布fov内点云
     global_map_in_FOV = o3d.geometry.PointCloud()
     global_map_in_FOV.points = o3d.utility.Vector3dVector(np.squeeze(global_map_in_map[indices, :3]))
 
-    # 发布fov内点云
     header = cur_odom.header
     header.frame_id = 'map'
     publish_point_cloud(pub_submap, header, np.array(global_map_in_FOV.points)[::10])
@@ -119,16 +157,15 @@ def global_localization(pose_estimation):
     # print(global_map, cur_scan, T_map_to_odom)
     rospy.loginfo('Global localization by scan-to-map matching......')
 
-    # TODO 这里注意线程安全
+    # 创建当前激光扫描点云的一个副本 TODO 这里注意线程安全
     scan_tobe_mapped = copy.copy(cur_scan)
 
     tic = time.time()
 
+    # 提取全局地图中在当前机器人视野内的点云
     global_map_in_FOV = crop_global_map_in_FOV(global_map, pose_estimation, cur_odom)
-
     # 粗配准
     transformation, _ = registration_at_scale(scan_tobe_mapped, global_map_in_FOV, initial=pose_estimation, scale=5)
-
     # 精配准
     transformation, fitness = registration_at_scale(scan_tobe_mapped, global_map_in_FOV, initial=transformation,
                                                     scale=1)
@@ -232,6 +269,7 @@ if __name__ == '__main__':
     pub_submap = rospy.Publisher('/submap', PointCloud2, queue_size=1)
     pub_map_to_odom = rospy.Publisher('/map_to_odom', Odometry, queue_size=1)
 
+    # /cloud_registered 和 /Odometry 都由 laserMapping 线程发布
     rospy.Subscriber('/cloud_registered', PointCloud2, cb_save_cur_scan, queue_size=1)
     rospy.Subscriber('/Odometry', Odometry, cb_save_cur_odom, queue_size=1)
 
@@ -244,6 +282,7 @@ if __name__ == '__main__':
         rospy.logwarn('Waiting for initial pose....')
 
         # 等待初始位姿
+        # 不给定 timeout 参数时，默认会一直等待
         pose_msg = rospy.wait_for_message('/initialpose', PoseWithCovarianceStamped)
         initial_pose = pose_to_mat(pose_msg)
         if cur_scan:

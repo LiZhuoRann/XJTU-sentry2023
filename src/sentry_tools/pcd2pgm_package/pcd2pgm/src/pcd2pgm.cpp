@@ -7,11 +7,11 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <sensor_msgs/PointCloud2.h>
 
-#include <pcl/filters/conditional_removal.h>         //条件滤波器头文件
-#include <pcl/filters/passthrough.h>                 //直通滤波器头文件
-#include <pcl/filters/radius_outlier_removal.h>      //半径滤波器头文件
-#include <pcl/filters/statistical_outlier_removal.h> //统计滤波器头文件
-#include <pcl/filters/voxel_grid.h>                  //体素滤波器头文件
+#include <pcl/filters/conditional_removal.h>         // 条件滤波器头文件
+#include <pcl/filters/passthrough.h>                 // 直通滤波器头文件
+#include <pcl/filters/radius_outlier_removal.h>      // 半径滤波器头文件
+#include <pcl/filters/statistical_outlier_removal.h> // 统计滤波器头文件
+#include <pcl/filters/voxel_grid.h>                  // 体素滤波器头文件
 #include <pcl/point_types.h>
 
 std::string file_directory;
@@ -23,31 +23,32 @@ std::string map_topic_name;
 const std::string pcd_format = ".pcd";
 
 nav_msgs::OccupancyGrid map_topic_msg;
-//最小和最大高度
+// 最小和最大高度
 double thre_z_min = 0.3;
 double thre_z_max = 2.0;
-int flag_pass_through = 0;
+bool flag_pass_through = false;
 double map_resolution = 0.05;
 double thre_radius = 0.1;
-//半径滤波的点数阈值
+// 半径滤波的点数阈值
 int thres_point_count = 10;
 
-//直通滤波后数据指针
+// 直通滤波后数据指针
 pcl::PointCloud<pcl::PointXYZ>::Ptr
     cloud_after_PassThrough(new pcl::PointCloud<pcl::PointXYZ>);
-//半径滤波后数据指针
+// 半径滤波后数据指针
 pcl::PointCloud<pcl::PointXYZ>::Ptr
     cloud_after_Radius(new pcl::PointCloud<pcl::PointXYZ>);
+
 pcl::PointCloud<pcl::PointXYZ>::Ptr
     pcd_cloud(new pcl::PointCloud<pcl::PointXYZ>);
 
-//直通滤波
+// 直通滤波
 void PassThroughFilter(const double &thre_low, const double &thre_high,
                        const bool &flag_in);
-//半径滤波
+// 半径滤波
 void RadiusOutlierFilter(const pcl::PointCloud<pcl::PointXYZ>::Ptr &pcd_cloud,
                          const double &radius, const int &thre_count);
-//转换为栅格地图数据并发布
+// 转换为栅格地图数据并发布
 void SetMapTopicMsg(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
                     nav_msgs::OccupancyGrid &msg);
 
@@ -66,12 +67,13 @@ int main(int argc, char **argv) {
 
   private_nh.param("thre_z_min", thre_z_min, 0.2);
   private_nh.param("thre_z_max", thre_z_max, 2.0);
-  private_nh.param("flag_pass_through", flag_pass_through, 0);
+  private_nh.param("flag_pass_through", flag_pass_through, false);
   private_nh.param("thre_radius", thre_radius, 0.5);
   private_nh.param("map_resolution", map_resolution, 0.05);
   private_nh.param("thres_point_count", thres_point_count, 10);
   private_nh.param("map_topic_name", map_topic_name, std::string("map"));
 
+  // 发布栅格地图
   ros::Publisher map_topic_pub =
       nh.advertise<nav_msgs::OccupancyGrid>(map_topic_name, 1);
 
@@ -82,11 +84,11 @@ int main(int argc, char **argv) {
   }
 
   std::cout << "初始点云数据点数：" << pcd_cloud->points.size() << std::endl;
-  //对数据进行直通滤波
-  PassThroughFilter(thre_z_min, thre_z_max, bool(flag_pass_through));
-  //对数据进行半径滤波
+  // 数据进行直通滤波，结果存储在全局变量 cloud_after_PassThrough 中
+  PassThroughFilter(thre_z_min, thre_z_max, flag_pass_through);
+  // 对数据进行半径滤波，传入 cloud_after_PassThrough，结果保存在 file_directory + "map_radius_filter.pcd" 中
   RadiusOutlierFilter(cloud_after_PassThrough, thre_radius, thres_point_count);
-  //转换为栅格地图数据并发布
+  // 转换为栅格地图数据并发布
   SetMapTopicMsg(cloud_after_Radius, map_topic_msg);
   // SetMapTopicMsg(cloud_after_PassThrough, map_topic_msg);
 
@@ -101,20 +103,20 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-//直通滤波器对点云进行过滤，获取设定高度范围内的数据
+// 直通滤波器对点云进行过滤，获取设定高度范围内的数据
 void PassThroughFilter(const double &thre_low, const double &thre_high,
                        const bool &flag_in) {
   // 创建滤波器对象
   pcl::PassThrough<pcl::PointXYZ> passthrough;
-  //输入点云
+  // 输入点云
   passthrough.setInputCloud(pcd_cloud);
-  //设置对z轴进行操作
+  // 设置对z轴进行操作
   passthrough.setFilterFieldName("z");
-  //设置滤波范围
+  // 设置滤波范围
   passthrough.setFilterLimits(thre_low, thre_high);
   // true表示保留滤波范围外，false表示保留范围内
   passthrough.setFilterLimitsNegative(flag_in);
-  //执行滤波并存储
+  // 执行滤波并存储
   passthrough.filter(*cloud_after_PassThrough);
   // test 保存滤波后的点云到文件
   pcl::io::savePCDFile<pcl::PointXYZ>(file_directory + "map_filter.pcd",
@@ -155,7 +157,7 @@ void SetMapTopicMsg(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
   double x_min, x_max, y_min, y_max;
   double z_max_grey_rate = 0.05;
   double z_min_grey_rate = 0.95;
-  //? ? ??
+  // 线性函数的系数，给出栅格地图占有概率，我们的代码里没有用到，直接给成了百分百占有
   double k_line =
       (z_max_grey_rate - z_min_grey_rate) / (thre_z_max - thre_z_min);
   double b_line =
@@ -194,16 +196,19 @@ void SetMapTopicMsg(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
   msg.info.origin.orientation.y = 0.0;
   msg.info.origin.orientation.z = 0.0;
   msg.info.origin.orientation.w = 1.0;
-  //设置栅格地图大小
+
+  // 设置栅格地图大小
   msg.info.width = int((x_max - x_min) / map_resolution);
   msg.info.height = int((y_max - y_min) / map_resolution);
-  //实际地图中某点坐标为(x,y)，对应栅格地图中坐标为[x*map.info.width+y]
+
+  // 实际地图中某点坐标为(x,y)，对应栅格地图中坐标为[x*map.info.width+y]
   msg.data.resize(msg.info.width * msg.info.height);
   msg.data.assign(msg.info.width * msg.info.height, 0);
 
-  ROS_INFO("data size = %d\n", msg.data.size());
+  ROS_INFO("data size = %d\n", uint32_t(msg.data.size()));
 
   for (int iter = 0; iter < cloud->points.size(); iter++) {
+    // TODO: 这里的逻辑是啥玩意儿？
     int i = int((cloud->points[iter].x - x_min) / map_resolution);
     if (i < 0 || i >= msg.info.width)
       continue;
@@ -213,7 +218,6 @@ void SetMapTopicMsg(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,
       continue;
     // 栅格地图的占有概率[0,100]，这里设置为占据
     msg.data[i + j * msg.info.width] = 100;
-    //    msg.data[i + j * msg.info.width] = int(255 * (cloud->points[iter].z *
-    //    k_line + b_line)) % 255;
+    //    msg.data[i + j * msg.info.width] = int(255 * (cloud->points[iter].z * k_line + b_line)) % 255;
   }
 }

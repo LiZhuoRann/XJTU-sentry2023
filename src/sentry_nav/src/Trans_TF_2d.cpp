@@ -1,3 +1,13 @@
+/**
+ * @file Trans_TF_2d.cpp
+ * @author your name (you@domain.com)
+ * @brief 这个是最后被选用发布的 TF
+ * @version 0.1
+ * @date 2024-03-11
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_broadcaster.h>
@@ -28,16 +38,15 @@ int main(int argc, char** argv){
     }
     float robot_pose_x=transform_listener.getOrigin().x();
     float robot_pose_y=transform_listener.getOrigin().y();
-    float robot_pose_z=0;
-    float robot_oriation_x=transform_listener.getRotation().getX();
-    float robot_oriation_y=transform_listener.getRotation().getY();
+    // float robot_pose_z=0;
+    // float robot_oriation_x=transform_listener.getRotation().getX();
+    // float robot_oriation_y=transform_listener.getRotation().getY();
     float robot_oriation_z=transform_listener.getRotation().getZ();
     float robot_oriation_w=transform_listener.getRotation().getW();
 
     transform_broadcaster.setOrigin( tf::Vector3(robot_pose_x, robot_pose_y, 0.0) );
     transform_broadcaster.setRotation( tf::Quaternion(0, 0, robot_oriation_z, robot_oriation_w) );
     broadcaster.sendTransform(tf::StampedTransform(transform_broadcaster, ros::Time::now(), "map", "body_2d"));
-    
 
     rate.sleep();
   }

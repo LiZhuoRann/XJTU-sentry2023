@@ -32,7 +32,7 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-#include <omp.h>
+#include "/usr/lib/gcc/x86_64-linux-gnu/9/include/omp.h"
 #include <mutex>
 #include <math.h>
 #include <thread>
@@ -494,8 +494,8 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. noted that pcd save will influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. noted that pcd save will influence the real-time performences */
     if (pcd_save_en)
     {
         int size = feats_undistort->points.size();
@@ -1012,8 +1012,8 @@ int main(int argc, char** argv)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. pcd save will largely influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. pcd save will largely influence the real-time performences */
     if (pcl_wait_save->size() > 0 && pcd_save_en)
     {
         string file_name = string("scans.pcd");
