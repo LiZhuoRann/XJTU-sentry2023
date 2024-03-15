@@ -1,0 +1,18 @@
+<launch>
+    <node pkg="octomap_server" type = "octomap_server_node" name="octomap_server">
+
+        <param name = "resolution" value="0.1" />
+        <param name = "frame_id" type="str" value="robot_foot_init" />
+
+        <param name = "sensor_model/max_range" value="5.0" />
+        <!-- 动态构建地图时用于插入点云数据的最大范围（以米为单位），将范围限制在有用的范围内（例如 5m）可以防止虚假的错误点。 -->
+        
+        <param name = "latch" value="false" />
+        <!-- 不管主题是锁定发布还是每次更改仅发布一次，为了在构建地图（频繁更新）时获得最佳性能，请将其设置为 false，如果设置为 true，在每个地图上更改都会创建所有主题和可视化。 -->
+        
+        <param name = "pointcloud_max_z" value="0.25" />
+        <param name = "pointcloud_min_z" value="0.0" />
+
+        <remap from ="cloud_in" to="/cloud_registered" />
+    </node>
+</launch>

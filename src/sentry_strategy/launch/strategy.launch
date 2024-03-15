@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+
+<launch>
+    <node pkg="sentry_strategy" type="strategy.py" name="robot_controller" output="screen"/>
+    <param name="RobotStatus/ok" type="bool" value="true"/>
+</launch>
