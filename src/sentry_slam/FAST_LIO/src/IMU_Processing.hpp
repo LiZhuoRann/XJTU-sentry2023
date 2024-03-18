@@ -140,7 +140,7 @@ void ImuProcess::set_gyr_cov(const V3D &scaler)
 }
 
 void ImuProcess::set_acc_cov(const V3D &scaler)
-{
+{ 
   cov_acc_scale = scaler;
 }
 

@@ -58,7 +58,6 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen3 REQUIRED)
 find_package(PCL 1.10 REQUIRED)
-
 message(Eigen: ${EIGEN3_INCLUDE_DIR})
 
 include_directories(
@@ -88,3 +87,10 @@ add_executable(fastlio_mapping src/laserMapping.cpp include/ikd-Tree/ikd_Tree.cp
 target_link_libraries(fastlio_mapping ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${PYTHON_LIBRARIES})
 target_include_directories(fastlio_mapping PRIVATE ${PYTHON_INCLUDE_DIRS})
 add_dependencies(fastlio_mapping fast_lio_generate_messages_cpp)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/PCD)
+add_executable(pcd_viewer PCD/viewer.cpp)
+target_link_libraries(pcd_viewer ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(pcd_publisher PCD/publish_pcd.cpp)
+target_link_libraries(pcd_publisher ${catkin_LIBRARIES} ${PCL_LIBRARIES})

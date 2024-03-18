@@ -19,8 +19,6 @@ DWAPlannerROS:
   vy_samples: 10               # 10
   vth_samples: 10               # 10
 
-
-
   # Scoring                     Defaults
   # meter_scoring: false          # Is this even taken into account?
   # path_distance_bias: 20.0      # 20.0
@@ -62,5 +60,5 @@ DWAPlannerROS:
 
   # publish_traj_pc: true
   # publish_cost_grid_pc: true
-  # global_frame_id: camera_init_2d
-  global_frame_id: robot_foot_init
+  global_frame_id: camera_init
+  # global_frame_id: robot_foot_init

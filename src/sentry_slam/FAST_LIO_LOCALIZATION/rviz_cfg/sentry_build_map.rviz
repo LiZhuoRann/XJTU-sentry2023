@@ -436,11 +436,7 @@ Visualization Manager:
         All Enabled: true
         body:
           Value: true
-        body_foot:
-          Value: true
         camera_init:
-          Value: true
-        robot_foot_init:
           Value: true
       Marker Alpha: 1
       Marker Scale: 1
@@ -453,15 +449,13 @@ Visualization Manager:
           body:
             body_foot:
               {}
-          robot_foot_init:
-            {}
       Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
     Default Light: true
-    Fixed Frame: robot_foot_init
+    Fixed Frame: camera_init
     Frame Rate: 20
   Name: root
   Tools:

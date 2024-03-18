@@ -35,7 +35,7 @@
 #include <omp.h>
 #include <mutex>
 #include <math.h>
-#include <thread>
+// #include <thread>
 #include <fstream>
 #include <csignal>
 #include <unistd.h>
@@ -94,6 +94,7 @@ int    iterCount = 0, feats_down_size = 0, NUM_MAX_ITERATIONS = 0, laserCloudVal
 bool   point_selected_surf[100000] = {0};
 bool   lidar_pushed, flg_first_scan = true, flg_exit = false, flg_EKF_inited;
 bool   scan_pub_en = false, dense_pub_en = false, scan_body_pub_en = false;
+string pcd_filename;
 
 vector<vector<int>>  pointSearchInd_surf; 
 vector<BoxPointType> cub_needrm;
@@ -196,6 +197,12 @@ void pointBodyToWorld(const Matrix<T, 3, 1> &pi, Matrix<T, 3, 1> &po)
     po[2] = p_global(2);
 }
 
+/**
+ * @brief 关键函数
+ * 
+ * @param pi 
+ * @param po 
+ */
 void RGBpointBodyToWorld(PointType const * const pi, PointType * const po)
 {
     V3D p_body(pi->x, pi->y, pi->z);
@@ -494,7 +501,7 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
+    /* 1. make sure you have enough memories */
     /* 2. noted that pcd save will influence the real-time performences **/
     if (pcd_save_en)
     {
@@ -808,8 +815,8 @@ int main(int argc, char** argv)
     memset(point_selected_surf, true, sizeof(point_selected_surf));
     memset(res_last, -1000.0f, sizeof(res_last));
 
-    Lidar_T_wrt_IMU<<VEC_FROM_ARRAY(extrinT);
-    Lidar_R_wrt_IMU<<MAT_FROM_ARRAY(extrinR);
+    Lidar_T_wrt_IMU << VEC_FROM_ARRAY(extrinT);
+    Lidar_R_wrt_IMU << MAT_FROM_ARRAY(extrinR);
     p_imu->set_extrinsic(Lidar_T_wrt_IMU, Lidar_R_wrt_IMU);
     p_imu->set_gyr_cov(V3D(gyr_cov, gyr_cov, gyr_cov));
     p_imu->set_acc_cov(V3D(acc_cov, acc_cov, acc_cov));
@@ -1012,14 +1019,15 @@ int main(int argc, char** argv)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. pcd save will largely influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. pcd save will largely influence the real-time performences */
     if (pcl_wait_save->size() > 0 && pcd_save_en)
     {
-        string file_name = string("scans.pcd");
-        string all_points_dir(string(string(ROOT_DIR) + "PCD/") + file_name);
+        // string file_name = string("scans.pcd");
+        nh.param<string>("pcd_filename",pcd_filename,"scans.pcd");
+        string all_points_dir(string(string(ROOT_DIR) + "PCD/") + pcd_filename);
         pcl::PCDWriter pcd_writer;
-        cout << "current scan saved to /PCD/" << file_name<<endl;
+        cout << "current scan saved to /PCD/" << pcd_filename << endl;
         pcd_writer.writeBinary(all_points_dir, *pcl_wait_save);
     }
 

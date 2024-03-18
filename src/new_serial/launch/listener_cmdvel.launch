@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-
-    <node name="listener_cmdvel" pkg="new_serial" type="listener_cmdvel" output="screen" respawn="true" />
-
-</launch>

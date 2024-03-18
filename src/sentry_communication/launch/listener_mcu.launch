@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+
+<launch>
+    <node name="listener_mcu" pkg="sentry_communication" type="listener_mcu" output="screen" respawn="true" />
+</launch>
