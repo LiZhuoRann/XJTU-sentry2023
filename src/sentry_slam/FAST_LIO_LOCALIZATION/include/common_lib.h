@@ -1,7 +1,7 @@
 #ifndef COMMON_LIB_H
 #define COMMON_LIB_H
 
-#include <so3_math.h> 
+#include <so3_math.h>
 #include <Eigen/Eigen>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>

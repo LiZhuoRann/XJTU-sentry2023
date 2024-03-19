@@ -88,3 +88,4 @@ catkin_package(
 add_executable(fastlio_mapping1 src/laserMapping.cpp include/ikd-Tree/ikd_Tree.cpp src/preprocess.cpp)
 target_link_libraries(fastlio_mapping1 ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${PYTHON_LIBRARIES})
 target_include_directories(fastlio_mapping1 PRIVATE ${PYTHON_INCLUDE_DIRS})
+add_dependencies(fastlio_mapping1 fast_lio_generate_messages_cpp)

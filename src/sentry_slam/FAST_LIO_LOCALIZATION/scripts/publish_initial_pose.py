@@ -9,6 +9,7 @@ import tf.transformations
 from geometry_msgs.msg import Pose, Point, Quaternion, PoseWithCovarianceStamped
 
 if __name__ == '__main__':
+    # 使用argparse库来解析命令行参数
     parser = argparse.ArgumentParser()
     parser.add_argument('x', type=float)
     parser.add_argument('y', type=float)
@@ -18,6 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('roll', type=float)
     args = parser.parse_args()
 
+    # 发布 PoseWithCovarianceStamped 类型的话题 /initialpose
     rospy.init_node('publish_initial_pose')
     pub_pose = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=1)
 
@@ -29,7 +31,9 @@ if __name__ == '__main__':
     initial_pose.pose.pose = Pose(Point(*xyz), Quaternion(*quat))
     initial_pose.header.stamp = rospy.Time().now()
     initial_pose.header.frame_id = 'map'
+
     rospy.sleep(1)
     rospy.loginfo('Initial Pose: {} {} {} {} {} {}'.format(
         args.x, args.y, args.z, args.yaw, args.pitch, args.roll, ))
+    # 成功发布初始位姿
     pub_pose.publish(initial_pose)

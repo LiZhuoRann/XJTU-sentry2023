@@ -514,8 +514,8 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. pcd save will largely influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. pcd save will largely influence the real-time performences */
     if (pcd_save_en)
     {
         int size = feats_undistort->points.size();
@@ -589,6 +589,7 @@ void set_posestamp(T & out)
     
 }
 
+// camera_init 到 body 的 TF 
 void publish_odometry(const ros::Publisher & pubOdomAftMapped)
 {
     odomAftMapped.header.frame_id = "camera_init";
@@ -1066,15 +1067,14 @@ int main(int argc, char** argv)
     }
 
     /**************** save map ****************/
-    /* 1. make sure you have enough memories
-    /* 2. pcd save will largely influence the real-time performences **/
+    /* 1. make sure you have enough memories */
+    /* 2. pcd save will largely influence the real-time performences */
     if (pcl_wait_save->size() > 0 && pcd_save_en)
     {
-        // string file_name = string("scans.pcd");
-        string file_name = string("basement.pcd");
+        string file_name = string("scans.pcd");
         string all_points_dir(string(string(ROOT_DIR) + "PCD/") + file_name);
         pcl::PCDWriter pcd_writer;
-        cout << "current scan saved to /PCD/" << file_name <<endl;
+        cout << "current scan saved to /PCD/" << file_name<<endl;
         pcd_writer.writeBinary(all_points_dir, *pcl_wait_save);
     }
 

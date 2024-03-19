@@ -1,6 +1,39 @@
+#---------------- TrajectoryPlannerROS --------------------------#
+# TrajectoryPlannerROS:
+# # Robot Configuration Parameters
+#   max_vel_x: 0.5 # X 方向最大速度
+#   min_vel_x: 0.1 # X 方向最小速速
+#   max_vel_y: 0.5 # X 方向最小速速
+#   min_vel_y: 0.1 # X 方向最小速速
+ 
+#   max_vel_theta:  1.0 # 
+#   min_vel_theta: -1.0
+#   min_in_place_vel_theta: 1.0
+ 
+#   acc_lim_x: 1.0 # X 加速限制
+#   acc_lim_y: 1.0 # Y 加速限制
+#   acc_lim_theta: 0.6 # 角速度加速限制
+ 
+# # Goal Tolerance Parameters，目标公差
+  # xy_goal_tolerance: 0.2 #default:0.1
+  # yaw_goal_tolerance: 0.1 #default:0.05
+ 
+# # Differential-drive robot configuration
+# # 是否是全向移动机器人
+#   holonomic_robot: true
+ 
+# # Forward Simulation Parameters，前进模拟参数
+#   sim_time: 2
+#   vx_samples: 18
+#   vx_samples: 10
+#   vtheta_samples: 20
+#   sim_granularity: 0.05
+
+# =================== segement ===============
 base_local_planner: "dwa_local_planner/DWAPlannerROS"
 
-controller_frequency: 30.0      # 30.0
+controller_frequency: 20      # 20.0
+# controller_patience:  15.0      # 15.0
 
 DWAPlannerROS:
   odom_topic: Odometry
@@ -58,7 +91,7 @@ DWAPlannerROS:
   # publish_cost_grid_pc: true    # false
 
 
-  # publish_traj_pc: true
-  # publish_cost_grid_pc: true
+  publish_traj_pc: true
+  publish_cost_grid_pc: true
   global_frame_id: camera_init
   # global_frame_id: robot_foot_init

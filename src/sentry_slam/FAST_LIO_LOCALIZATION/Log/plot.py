@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-#######for ikfom
+####### for ikfom
 fig, axs = plt.subplots(4,2)
 lab_pre = ['', 'pre-x', 'pre-y', 'pre-z']
 lab_out = ['', 'out-x', 'out-y', 'out-z']
@@ -29,7 +29,7 @@ for j in range(8):
     axs[j%4, j/4].grid()
     axs[j%4, j/4].legend()
 plt.grid()
-#######for ikfom#######
+####### for ikfom #######
 
 
 #### Draw IMU data

@@ -135,6 +135,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/sentry_nav_node.cpp)
+
+# 编译 Trans_TF_2d.cpp 生成可执行文件，节点类型 trans_tf_2d
 add_executable(trans_tf_2d src/Trans_TF_2d.cpp)
 add_executable(trans_tf_2d_odom src/Trans_TF_2d_odom.cpp)
 add_executable(trans_odom_2d src/Trans_odom_2d.cpp)

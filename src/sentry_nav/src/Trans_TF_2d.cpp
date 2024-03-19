@@ -37,9 +37,11 @@ int main(int argc, char** argv){
       ROS_ERROR("%s",ex.what());
       ros::Duration(1.0).sleep();
     }
-    // 只
     float robot_pose_x=transform_listener.getOrigin().x();
     float robot_pose_y=transform_listener.getOrigin().y();
+    // float robot_pose_z=0;
+    // float robot_oriation_x=transform_listener.getRotation().getX();
+    // float robot_oriation_y=transform_listener.getRotation().getY();
     float robot_oriation_z=transform_listener.getRotation().getZ();
     float robot_oriation_w=transform_listener.getRotation().getW();
 

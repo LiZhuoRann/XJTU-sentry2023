@@ -502,7 +502,7 @@ void publish_frame_world(const ros::Publisher & pubLaserCloudFull)
 
     /**************** save map ****************/
     /* 1. make sure you have enough memories */
-    /* 2. noted that pcd save will influence the real-time performences **/
+    /* 2. noted that pcd save will influence the real-time performences */
     if (pcd_save_en)
     {
         int size = feats_undistort->points.size();
