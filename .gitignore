@@ -2,4 +2,5 @@ build/
 .cache/
 devel/
 .vscode/
-*.bag
+rosbag_recorded/
+

@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
     if(!ac.isServerConnected()) {
         ROS_ERROR("move_base server not connected!!!!");
     }
-    
+    mux
     ros::spin(); // 进入消息循环
 
     return 0;
