@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
   serial
   std_msgs
   tf
+  move_base
+  nav_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -141,6 +143,7 @@ include_directories(
 add_executable(listener_cmdvel src/listener_cmdvel.cpp)
 add_executable(publisher_mcu src/publisher_mcu.cpp)
 add_executable(listener_mcu src/listener_mcu.cpp)
+# add_executable(mySerial src/mySerial.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,6 +165,9 @@ target_link_libraries(publisher_mcu
 target_link_libraries(listener_mcu
   ${catkin_LIBRARIES}
 )
+# target_link_libraries(listener_mcu
+#   ${catkin_LIBRARIES}
+# )
 
 #############
 ## Install ##
@@ -217,3 +223,4 @@ target_link_libraries(listener_mcu
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_definitions(-w)

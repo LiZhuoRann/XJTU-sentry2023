@@ -1,0 +1,17 @@
+<launch>
+    <!-- <node pkg="livox_ros_driver" type="msg_" name="turtlesim_node" /> -->
+    <!-- <include file="${find livox_ros_driver2}/launch_ROS1/msg_MID360.launch" /> -->
+    <node pkg="rosbag" type="record" name="recording_pcl" 
+        args="/cloud_registered /livox/lidar/ livox/imu  -o /home/xjturm/shaobing/siyuan.bag" />
+        <!-- 注意这里 bag 文件的路径必须为绝对路径 -->
+        <!-- <args= -o pcl_registered.bag"   -->
+
+<![CDATA[
+    <!-- 注意，在播放 rosbag 时，需要加上 \-\-clock 参数 -->
+    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock /home/xx/xxx/xxx/xxx.bag"/>
+    
+    <!-- 如果需要使用 rosbag 中的时间戳，你需要在 launch 文件 中增加以下参数： -->
+    <param name="use_sim_time" value="true"/>
+]]>
+
+</launch>

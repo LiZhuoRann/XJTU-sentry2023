@@ -64,5 +64,15 @@
         "variant": "cpp",
         "bit": "cpp"
     },
-    "cmake.sourceDirectory": "/shaobing/src"
+    "cmake.sourceDirectory": "/shaobing/src",
+    "python.autoComplete.extraPaths": [
+        "/home/xjturm/shaobing/devel/lib/python3/dist-packages",
+        "/home/xjturm/ws_livox/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/xjturm/shaobing/devel/lib/python3/dist-packages",
+        "/home/xjturm/ws_livox/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ]
 }

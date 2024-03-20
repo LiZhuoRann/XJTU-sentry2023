@@ -29,8 +29,10 @@ void pickPointCallback(const pcl::visualization::PointPickingEvent& event, void*
     std::cout << current_point.x << " " << current_point.y << " " << current_point.z << std::endl;
 }
 
-int main() {
-    std::string file_name("/home/xjturm/shaobing/src/sentry_slam/FAST_LIO/PCD/rainbow.pcd");
+int main(int argc, char** argv) {
+    std::string filepath = std::string(argv[1]);
+    // std::string file_name("/home/xjturm/shaobing/src/sentry_slam/FAST_LIO/PCD/rainbow.pcd");
+    std::string file_name(filepath);
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("viewer"));
     // 加载点云

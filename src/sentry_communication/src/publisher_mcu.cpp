@@ -19,7 +19,7 @@ ros::Publisher serial_pub;
 
 // 封装好的打开串口函数
 int open_port();
-// 封装好的d读串口
+// 封装好的读串口
 void readSerial();
 
 // Callback function for /cmd_vel_string topic

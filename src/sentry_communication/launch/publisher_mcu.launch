@@ -2,6 +2,6 @@
 
 <launch>
 
-    <node name="publisher_mcu" pkg="new_serial" type="publisher_mcu" output="screen" respawn="true" />
+    <node name="publisher_mcu" pkg="sentry_communication" type="publisher_mcu" output="screen" respawn="true" />
 
 </launch>

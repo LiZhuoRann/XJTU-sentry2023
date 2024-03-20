@@ -37,7 +37,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: surround
+    SyncSource: ""
   - Class: rviz/Views
     Expanded:
       - /Current View1
@@ -434,10 +434,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        body:
-          Value: true
-        camera_init:
-          Value: true
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -445,10 +441,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        camera_init:
-          body:
-            body_foot:
-              {}
+        {}
       Update Interval: 0
       Value: true
   Enabled: true

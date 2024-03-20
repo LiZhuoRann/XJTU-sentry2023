@@ -40,16 +40,16 @@ DWAPlannerROS:
   holonomic_robot: true
 
   xy_goal_tolerance: 0.05
-  yaw_goal_tolerance: 0.02
+  yaw_goal_tolerance: 6.28  # 对于导航到目标点的偏航角姿态无要求
   latch_xy_goal_tolerance: false
 
   # Forward simulation          Defaults
   use_dwa: true                 # true
   sim_time: 1.0                 # 1.0
-  sim_granularity: 0.05       # 0.07
-  angular_sim_granularity: 0.1 # 0.10 (1 degree = 0.017 rad)
-  vx_samples: 3               # 3
-  vy_samples: 10               # 10
+  sim_granularity: 0.05         # 0.07
+  angular_sim_granularity: 0.1  # 0.10 (1 degree = 0.017 rad)
+  vx_samples: 3                 # 3
+  vy_samples: 10                # 10
   vth_samples: 10               # 10
 
   # Scoring                     Defaults
