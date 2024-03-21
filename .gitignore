@@ -3,4 +3,6 @@ build/
 devel/
 .vscode/
 rosbag_recorded/
+# 保存的点云地图太大了，github 放不下
+src/sentry_slam/FAST_LIO/PCD/
 

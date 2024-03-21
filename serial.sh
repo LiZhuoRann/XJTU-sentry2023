@@ -8,5 +8,5 @@ sleep 0.5s
 }&
 sleep 0.5s
 {
-    gnome-terminal --tab "publisher_mcu" -- bash -c "sudo chmod 666 /dev/ttyACM0;roslaunch sentry_communication publisher_mcu.launch"
+    gnome-terminal --tab "publisher_mcu" -- bash -c "roslaunch sentry_communication publisher_mcu.launch"
 }
