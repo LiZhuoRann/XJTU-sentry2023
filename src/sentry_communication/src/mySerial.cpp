@@ -1,3 +1,7 @@
+/*****************************************/
+/**** WARNING：THIS FILE IS ABANDONED！****/
+/*****************************************/
+
 #include "mySerial.hpp" 
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>

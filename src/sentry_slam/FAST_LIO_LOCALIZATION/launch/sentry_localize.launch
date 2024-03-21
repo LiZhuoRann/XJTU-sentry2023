@@ -39,7 +39,8 @@
 	<!-- pointscloud2 to laserscans -->
 	<include file="$(find fast_lio_localization)/launch/PointsCloud2toLaserscan.launch" />
 
-	<!-- 发布一个雷达初始位置camera_init到map的静态映射 -->
+	<!-- 发布一个雷达初始位置 camera_init 到 map 的静态映射，认为雷达初始位置就是地图原点 -->
+	<!-- 也就是说启动 fast_lio_localiization 时机器人必须和建图起点重合 -->
 	<node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_3" args="0 0 0 0 0 0 map camera_init" />
 	
 </launch>

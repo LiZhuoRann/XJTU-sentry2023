@@ -1,5 +1,13 @@
 <?xml version="1.0"?>
 
 <launch>
-    <node name="listener_mcu" pkg="sentry_communication" type="listener_mcu" output="screen" respawn="true" />
+    <node pkg="sentry_communication" type="listener_mcu" name="listener_mcu" output="screen" respawn="true">
+        <arg name="debug" value="true" />
+        <group if=$(arg debug)>
+            <param name="coo_x" type="float" value="0" />
+            <param name="coo_y" type="float" value="0" />
+            <param name="stop" type="int" value="0" />
+            <param name="color" type="int" value="0" />
+        </group>
+    </node>
 </launch>

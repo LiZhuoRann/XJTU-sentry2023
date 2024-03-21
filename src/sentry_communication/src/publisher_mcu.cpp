@@ -49,7 +49,6 @@ int main(int argc, char **argv) {
     ros::NodeHandle nh_private("~");
 
     nh_private.param<std::string>("PortName", port_name, "/dev/ttyACM0");
-
     open_port();
 
     // Publish serial data to /serial_data topic

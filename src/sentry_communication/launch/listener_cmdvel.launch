@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-    <node name="listener_cmdvel" pkg="sentry_communication" type="listener_cmdvel" output="screen" respawn="true" />
+    <node name="listener_cmdvel" pkg="sentry_communication" type="listener_cmdvel" output="screen" respawn="true" >
+        <param name="LOG_ENABLE" value="true" />
+    </node>
 </launch>
