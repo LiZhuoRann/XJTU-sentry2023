@@ -26,8 +26,8 @@ typedef struct {            // 都使用朴素机器人坐标系,前x,左y,上z
     float coo_x_current;    // 当前 x 坐标
     float coo_y_current;    // 当前 y 坐标
     uint8_t navState;
-    uint32_t reserve_1: 32;
-    uint32_t reserve_2: 32;
+    float target_x;
+    float target_y;
     uint32_t reserve_3: 32;
     uint8_t frame_tail;     //帧尾 0x21
 } navInfo_t;

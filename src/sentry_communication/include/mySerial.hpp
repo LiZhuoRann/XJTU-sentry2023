@@ -239,9 +239,7 @@ void strategyHandler() {
     // 设置目标点的位置和方向
     goal.target_pose.pose.position.x = navGoal.coo_x;
     goal.target_pose.pose.position.x = navGoal.coo_y;
-
     ROS_INFO("\n[move_base]: Sending goal");
-    
     ac.sendGoal(goal);
     ac.waitForResult();
 

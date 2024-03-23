@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
 
 <launch>
+    <arg name="PI" value="3.1415926" />
+    <arg name="debug" value="false" />
     <node pkg="sentry_communication" type="listener_mcu" name="listener_mcu" output="screen" respawn="true">
-        <arg name="debug" value="true" />
-        <group if=$(arg debug)>
-            <param name="coo_x" type="float" value="0" />
-            <param name="coo_y" type="float" value="0" />
-            <param name="stop" type="int" value="0" />
-            <param name="color" type="int" value="0" />
-        </group>
+        <param if="$(arg debug)" name="debug" type="bool" value="true" />
+        <rosparam if="$(arg debug)" command="load" file="$(find sentry_communication)/param/navGoalSimulation.yaml" />
     </node>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="tf_body2chassis" args="0 0 0 0 0 $(arg PI) body chassis" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="tf_map2realWorld" args="-1 1 0 0 0 $(arg PI) map realWorld" />
 </launch>
