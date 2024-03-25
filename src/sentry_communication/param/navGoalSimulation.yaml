@@ -1,4 +1,17 @@
-coo_x: 0.2
-coo_y: 0.2
+# 通过 ROS CLI 发布导航指令，假装是电控发来的指令
+# 用法示例：
+# rostopic pub -1 /fakeNavGoal sentry_communication/navGoalSimulation -- 2.0 2.0 0 1
+# 解释： 发布类型为 sentry_communication/navGoal/Simulation 类型的话题 /fakeNavGoal,
+#      ‘--’ 后面跟的参数就是自定义消息的四个成员值
+
+# clean message
+coo_x: 4.4 # x_{realWorld} = x_{map}+1
+coo_y: 5   # y_{realWorld} = -y_{map}+1
 stop: 0
-color: 1 
+color: 0 
+
+# 初始化时就指定一个目标点
+# coo_x: 0.2
+# coo_y: 0.2
+# stop: 0
+# color: 1 

@@ -6,11 +6,12 @@
         <rosparam file="$(find sentry_nav)/param/global_costmap_params.yaml" command="load" />
         <rosparam file="$(find sentry_nav)/param/base_local_planner_params.yaml" command="load" />
         <rosparam file="$(find sentry_nav)/param/global_planner_params.yaml" command="load" />
+        <param name="clearing_rotation_allowed" value="false" />
     </node>
-
+    <node pkg="sentry_nav" type="navGoalHandler" name="navGoalHandler" output="screen" />
     <node pkg="sentry_nav" type="trans_tf_2d" name="trans_tF_2d" />
-    <!-- <node pkg="sentry_nav" type="trans_tf_2d_odom" name="trans_tF_2d_odom" />
-    <node pkg="sentry_nav" type="trans_odom_2d" name="trans_odom_2d" /> -->
+    <!-- <node pkg="sentry_nav" type="trans_tf_2d_odom" name="trans_tF_2d_odom" /> -->
+    <!-- <node pkg="sentry_nav" type="trans_odom_2d" name="trans_odom_2d" /> -->
 	<include file="$(find velocity_smoother_ema)/launch/velocity_smoother_ema.launch">
 	</include>
 </launch>

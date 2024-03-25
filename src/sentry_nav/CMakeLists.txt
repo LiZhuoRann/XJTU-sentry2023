@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+  sentry_communication
 )
 
 ## System dependencies are found with CMake's conventions
@@ -69,10 +70,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  sentry_communication
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sentry_nav
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+ CATKIN_DEPENDS roscpp rospy std_msgs sentry_communication
 #  DEPENDS system_lib
 )
 
@@ -117,7 +119,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -139,7 +141,8 @@ include_directories(
 # 编译 Trans_TF_2d.cpp 生成可执行文件，节点类型 trans_tf_2d
 add_executable(trans_tf_2d src/Trans_TF_2d.cpp)
 add_executable(trans_tf_2d_odom src/Trans_TF_2d_odom.cpp)
-add_executable(trans_odom_2d src/Trans_odom_2d.cpp)
+add_executable(navGoalHandler src/navGoalHandler.cpp)
+# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,9 +165,10 @@ target_link_libraries(trans_tf_2d
 target_link_libraries(trans_tf_2d_odom
   ${catkin_LIBRARIES}
 )
-target_link_libraries(trans_odom_2d
+target_link_libraries(navGoalHandler
   ${catkin_LIBRARIES}
 )
+
 #############
 ## Install ##
 #############

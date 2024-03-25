@@ -2,7 +2,7 @@
 
 <launch>
     <arg name="PI" value="3.1415926" />
-    <arg name="debug" value="false" />
+    <arg name="debug" value="true" />
     <node pkg="sentry_communication" type="listener_mcu" name="listener_mcu" output="screen" respawn="true">
         <param if="$(arg debug)" name="debug" type="bool" value="true" />
         <rosparam if="$(arg debug)" command="load" file="$(find sentry_communication)/param/navGoalSimulation.yaml" />

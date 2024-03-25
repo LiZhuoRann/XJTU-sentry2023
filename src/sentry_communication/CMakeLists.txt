@@ -18,7 +18,6 @@ find_package(catkin REQUIRED COMPONENTS
   move_base
   nav_msgs
   message_generation
-  message_runtime
 )
 
 ## System dependencies are found with CMake's conventions
@@ -57,7 +56,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  navGoalSimulation.msg
+  navGoal.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -75,10 +74,7 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
+generate_messages(DEPENDENCIES std_msgs)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -112,7 +108,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES sentry_communication
- CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs serial std_msgs tf
+ CATKIN_DEPENDS geometry_msgs roscpp rospy sensor_msgs serial std_msgs tf message_runtime
 #  DEPENDS system_lib
 )
 
@@ -144,7 +140,7 @@ include_directories(
 add_executable(listener_cmdvel src/listener_cmdvel.cpp)
 add_executable(publisher_mcu src/publisher_mcu.cpp)
 add_executable(listener_mcu src/listener_mcu.cpp)
-add_dependencies(listener_mcu ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(listener_mcu sentry_communication_generate_messages_cpp)
 
 # add_executable(mySerial src/mySerial.cpp)
 
@@ -168,9 +164,6 @@ target_link_libraries(publisher_mcu
 target_link_libraries(listener_mcu
   ${catkin_LIBRARIES}
 )
-# target_link_libraries(listener_mcu
-#   ${catkin_LIBRARIES}
-# )
 
 #############
 ## Install ##

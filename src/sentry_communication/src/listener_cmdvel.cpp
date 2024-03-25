@@ -23,6 +23,7 @@ navInfo_t navInfo;
 std::string state;
 
 void goal_calllback(const move_base_msgs::MoveBaseGoal& msg) {
+    navInfo.is_reach = 0x00;
     auto x = msg.target_pose.pose.position.x;
     auto y = msg.target_pose.pose.position.y;
     ROS_INFO("\n Target Coordinates: x:[%f], y:[%f]", x, y);
@@ -48,7 +49,7 @@ void navGoalCallback(const move_base_msgs::MoveBaseActionGoal& msg)
 
 void navStateCallback(const std_msgs::String& msg) {
     if(std::strcmp(msg.data.c_str(), "GOAL REACHED.") == 0) {
-        navInfo.is_reach = 0x00;
+        // navInfo.is_reach = 0x01;
     }
     state = msg.data;
     ROS_INFO("navigatioin State: %s",  msg.data.c_str());
@@ -166,8 +167,8 @@ int main(int argc, char **argv)
 if(LOG_ENABLE) {
         std::cout << "current speed cmd: vx= [" << navInfo.x_speed << "], vy= [" << navInfo.y_speed << "]" << std::endl;
         std::cout << "Action Status: " << state.c_str() << std::endl; 
-        std::cout << "current coordinates in map: x= [" << navInfo.coo_x_current << "], y= [" << navInfo.coo_y_current << " ]"<< std::endl;
-        std::cout << "target coordinates in map: x= [" << navInfo.target_x << "], y= [" << navInfo.target_y << " ]"<< std::endl;
+        std::cout << "current coordinates in 'realwWorld' frame: x= [" << navInfo.coo_x_current << "], y= [" << navInfo.coo_y_current << " ]"<< std::endl;
+        std::cout << "target coordinates in 'map' frame: x= [" << navInfo.target_x << "], y= [" << navInfo.target_y << " ]"<< std::endl;
         ROS_INFO("is reach: [%x]", navInfo.is_reach);
         std::cout << std::endl;
 }

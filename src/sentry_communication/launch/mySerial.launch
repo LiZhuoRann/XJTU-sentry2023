@@ -1,5 +1,0 @@
-<launch>
-    <node pkg="sentry_communication" type="mySerial" name="mySerial" />
-    <param name="baudRate" type="int" value="115200" />
-    <param name="portName" type="string" value="/dev/ttyACM0" />
-</launch>
