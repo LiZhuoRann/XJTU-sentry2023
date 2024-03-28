@@ -39,7 +39,7 @@ DWAPlannerROS:
   odom_topic: Odometry
   holonomic_robot: true
 
-  xy_goal_tolerance: 0.05
+  xy_goal_tolerance: 0.2
   yaw_goal_tolerance: 6.28  # 对于导航到目标点的偏航角姿态无要求
   latch_xy_goal_tolerance: false
 

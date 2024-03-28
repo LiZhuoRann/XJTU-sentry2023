@@ -73,7 +73,7 @@ public:
         goal.target_pose.header.stamp = ros::Time::now();
         ROS_INFO("go to the goal (in 'map' frame): x:[%f], y:[%f]", goal.target_pose.pose.position.x, goal.target_pose.pose.position.y);
         ac.sendGoal(goal);
-        ac.waitForResult();
+        // ac.waitForResult();
         if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
             ROS_INFO("You have reached the goal!");
         else

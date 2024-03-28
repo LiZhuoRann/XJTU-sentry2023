@@ -6,6 +6,7 @@
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include "protocol.h"
+#include "ros/param.h"
 #include "ros/subscriber.h"
 #include "ros/time.h"
 #include <ros/console.h>
@@ -116,17 +117,19 @@ public:
         static bool color_initialized = false;
         if (!color_initialized && navGoal.color == 1) {    // 1=RED
             ROS_INFO("*************** Robot Color is RED! ***************");
+            ros::param::set("/robotColor","RED");
             color_initialized = true;
             pub_initialPose.publish(fillInitialPose("RED"));
         } 
         else if (!color_initialized && navGoal.color == 2) {    // 2=BLUE
+            ros::param::set("/robotColor","BLUE");
             ROS_INFO("*************** Robot Color is BLUE! ***************");
             color_initialized = true;
             pub_initialPose.publish(fillInitialPose("BLUE"));
         } 
         
-        static float last_x_cmd = 1;
-        static float last_y_cmd = 1;
+        static float last_x_cmd = -1;
+        static float last_y_cmd = -1;
         if(last_x_cmd != navGoal.coo_x || last_y_cmd != navGoal.coo_y) {
             last_x_cmd = navGoal.coo_x;
             last_y_cmd = navGoal.coo_y;
@@ -155,6 +158,7 @@ int main(int argc, char **argv) {
 geometry_msgs::PoseWithCovarianceStamped fillInitialPose(const char* color_) {
     geometry_msgs::PoseWithCovarianceStamped initialPose;
     if(std::strcmp(color_, "BLUE") == 0) {   // color_ equals to "RED"
+        // 初始位姿
         initialPose.pose.pose.position.x = 0;
         initialPose.pose.pose.position.y = 0;
         initialPose.pose.pose.position.z = 0;
@@ -169,9 +173,29 @@ geometry_msgs::PoseWithCovarianceStamped fillInitialPose(const char* color_) {
         ROS_INFO("initialPose: \n\t Position: x:[%f], y:[%f], z:[%f] \n\t Orientation: x:[%f], y:[%f], z:[%f], w:[%f] ", \
             initialPose.pose.pose.position.x, initialPose.pose.pose.position.y, initialPose.pose.pose.position.z, \
             initialPose.pose.pose.orientation.x, initialPose.pose.pose.orientation.y, initialPose.pose.pose.orientation.z, initialPose.pose.pose.orientation.w);
+        // 初始坐标系静态变换
+        tf2_ros::StaticTransformBroadcaster broadcaster;
+        geometry_msgs::TransformStamped ts;
+        ts.header.stamp = ros::Time::now();
+        ts.header.frame_id = "map";
+        ts.child_frame_id = "camera_init";
+        ts.transform.translation.x = 0;
+        ts.transform.translation.y = 0;
+        ts.transform.translation.z = 0;
+        //----设置四元数:将 欧拉角数据转换成四元数
+        tf2::Quaternion qtn;
+        qtn.setRPY(0,0,0);
+        ts.transform.rotation.x = qtn.getX();
+        ts.transform.rotation.y = qtn.getY();
+        ts.transform.rotation.z = qtn.getZ();
+        ts.transform.rotation.w = qtn.getW();
+        broadcaster.sendTransform(ts);
+        ROS_INFO("broadcast static transform: \n Translation: x:[%f], y:[%f], z:[%f],\n Rotation: x:[%f], y:[%f], z:[%f], w:[%f]", \
+            ts.transform.translation.x, ts.transform.translation.y, ts.transform.translation.z, \
+            ts.transform.rotation.x, ts.transform.rotation.y, ts.transform.rotation.z,  ts.transform.rotation.w );
     }
     if(std::strcmp(color_, "RED") == 0) {
-        initialPose.pose.pose.position.x = 3.6;
+        initialPose.pose.pose.position.x = 3.4;
         initialPose.pose.pose.position.y = -4.0;
         initialPose.pose.pose.position.z = 0;
         tf::Quaternion quat;
@@ -185,6 +209,26 @@ geometry_msgs::PoseWithCovarianceStamped fillInitialPose(const char* color_) {
         ROS_INFO("initialPose: \n\t Position: x:[%f], y:[%f], z:[%f] \n\t Orientation: x:[%f], y:[%f], z:[%f], w:[%f]" ,
             initialPose.pose.pose.position.x, initialPose.pose.pose.position.y, initialPose.pose.pose.position.z, \
             initialPose.pose.pose.orientation.x, initialPose.pose.pose.orientation.y, initialPose.pose.pose.orientation.z, initialPose.pose.pose.orientation.w);    
+        // 初始坐标系静态变换
+        tf2_ros::StaticTransformBroadcaster broadcaster;
+        geometry_msgs::TransformStamped ts;
+        ts.header.stamp = ros::Time::now();
+        ts.header.frame_id = "map";
+        ts.child_frame_id = "camera_init";
+        ts.transform.translation.x = 3.4;
+        ts.transform.translation.y = -4;
+        ts.transform.translation.z = 0;
+        //----设置四元数:将 欧拉角数据转换成四元数
+        tf2::Quaternion qtn;
+        qtn.setRPY(0,0,180);
+        ts.transform.rotation.x = qtn.getX();
+        ts.transform.rotation.y = qtn.getY();
+        ts.transform.rotation.z = qtn.getZ();
+        ts.transform.rotation.w = qtn.getW();
+        broadcaster.sendTransform(ts);
+    // ROS_INFO("broadcast static transform: \n Translation: x:[%f], y:[%f], z:[%f],\n Rotation: x:[%f], y:[%f], z:[%f], w:[%f]", \
+    //     ts.transform.translation.x, ts.transform.translation.y, ts.transform.translation.z, \
+    //     ts.transform.rotation.x, ts.transform.rotation.y, ts.transform.rotation.z,  ts.transform.rotation.w );
     }
     return initialPose;
 }

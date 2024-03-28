@@ -1,0 +1,19 @@
+<launch>
+	<!-- <node pkg="fast_lio_localization" type="publish_initial_pose.py" name="publish_initial_pose" output="screen" >
+		<param name="x" value="0" />
+		<param name="y" value="0" />
+		<param name="z" value="0" />
+		<param name="pitch" value="0" />
+		<param name="yaw" value="0" />
+		<param name="roll" value="0" />
+	</node> -->
+	
+    <node pkg="fast_lio_localization" type="publish_initial_pose.py" name="publish_initial_pose" output="screen">
+		<param name="x" value="3.4" />
+		<param name="y" value="-4" />
+		<param name="z" value="0" />
+		<param name="pitch" value="0" />
+		<param name="yaw" value="180" />
+		<param name="roll" value="0" />
+	</node>
+</launch>

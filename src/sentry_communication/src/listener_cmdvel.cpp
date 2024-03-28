@@ -1,5 +1,6 @@
 #include <ros/ros.h>
 #include "geometry_msgs/Twist.h"
+#include <string>
 #include <tf/transform_listener.h>
 #include "nav_msgs/Odometry.h"
 #include "protocol.h"
@@ -84,12 +85,20 @@ void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg)
     // TODO: 静态 TF 变换，速度指令 from lidar frame to chassis frame.
     if(LOG_ENABLE) {
         ROS_INFO("\nReceived cmd_vel: Linear_x = %f, Linear_y = %f\n", navInfo.x_speed, navInfo.y_speed);
-    }
+    }      
 }
 
 void OdometryCallback(nav_msgs::Odometry msg) {
-    navInfo.coo_x_current = msg.pose.pose.position.x + 1;
-    navInfo.coo_y_current = -msg.pose.pose.position.y + 1;
+    std::string color;
+    ros::param::get("/robotColor",color);
+    if(color == "BLUE") {
+        navInfo.coo_x_current = msg.pose.pose.position.x + 1;
+        navInfo.coo_y_current = -msg.pose.pose.position.y + 1;
+    }
+    else if(color == "RED") {
+        navInfo.coo_x_current = -msg.pose.pose.position.x + 4;
+        navInfo.coo_y_current = msg.pose.pose.position.y + 4;
+    }
 }
 
 // map frame: 建图起点 右下角(0,0)，左下角（-0.3, -4），

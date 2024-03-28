@@ -9,23 +9,7 @@ Navigation Stack 配置教程
 ## sentry_nav 目录结构
 
 ```text
-├── CMakeLists.txt 
-├── launch
-│   ├── sentry_movebase.launch  // 加载配置文件并启动 move_base
-│   └── sentry_test.launch      // 
-├── overview.png
-├── package.xml
-├── param
-│   ├── base_local_planner_params.yaml
-│   ├── costmap_common_params.yaml
-│   ├── global_costmap_params.yaml
-│   ├── global_planner_params.yaml
-│   └── local_costmap_params.yaml
-├── readme.md
-└── src
-    ├── Trans_TF_2d.cpp
-    ├── Trans_TF_2d_odom.cpp
-    └── Trans_odom_2d.cpp
+
 ```
 ## TF 树
 
@@ -48,7 +32,7 @@ Navigation Stack 配置教程
     ```xml
     <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_2" args="-0.10 -0.11 0 0 0 0 camera_init robot_foot_init" />
     ```
-    - `tf_pub_3` 雷达初始位置 camera_init 到 map 的静态映射, mapping 时由于没有先验地图，无意义，只有在 localize 模式下被广播。**在我们的代码里没有被用到，而且这个变换关系我也无法理解**。
+    - `tf_pub_3` 雷达初始位置 camera_init 到 map 的静态映射,
     ```xml
     <node pkg="tf2_ros" type="static_transform_publisher" name="tf_pub_3" args="0 0 0 0 0 0 map camera_init" />
     ```
@@ -58,3 +42,13 @@ Eg.
 ```
 <node pkg="tf2_ros" type="statci_transform_publisher" name="xxx" args="x y z yaw pitch roll frame_id child_frame_id" >
 ```
+## 彩虹楼点云图 
+
+- 角点坐标：
+ $(-0.6, 0.8), (-1, -4.6), (4.1, -4.7), (4.5, 0.5)$
+- 理想地图的角点坐标
+ $(0,0), (0,5), (5,5), (5,0)$
+
+### 坐标变换 map_to_realWorld
+
+SVD 分解
